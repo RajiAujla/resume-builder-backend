@@ -1,4 +1,4 @@
-package com.project.resume_AI;
+package com.project.resume_backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
