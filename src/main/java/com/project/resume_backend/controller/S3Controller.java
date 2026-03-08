@@ -17,6 +17,11 @@ public class S3Controller {
     @Autowired
     private S3Service s3Service;
 
+    @GetMapping("/")
+    public String hello(){
+       return "Spring Boot applictaion is running";
+    }
+
     @PostMapping("/upload")
     public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file) throws IOException{
         s3Service.uploadFile(file);

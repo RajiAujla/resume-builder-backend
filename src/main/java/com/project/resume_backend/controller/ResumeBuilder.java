@@ -7,6 +7,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.resume_backend.model.ResumeRequest;
 
 @RestController
@@ -22,18 +25,25 @@ public class ResumeBuilder {
     }
 
  @PostMapping("/generate")
-public ResponseEntity<byte[]> generateResumePdf(@RequestBody ResumeRequest request) throws IOException, InterruptedException {
+public String generateResumePdf(@RequestBody ResumeRequest request) throws IOException, InterruptedException {
     // Call Python FastAPI
     String aiResponse = restTemplate.postForObject(
             "http://localhost:8000/generate",
             request,
             String.class
     );
+    //ResponseEntity<byte[]> response = generateLatexPdfResume(aiResponse);
+    return aiResponse;   
+}
 
+    private ResponseEntity<byte[]> generateLatexPdfResume(String aiResponse) throws IOException, InterruptedException{
+         ObjectMapper mapper = new ObjectMapper();
+    JsonNode node = mapper.readTree(aiResponse);
+    String latexContent = node.get("latex").asText(); 
     // Save LaTeX content to temp file
     File tempTexFile = File.createTempFile("resume", ".tex");
     try (FileWriter writer = new FileWriter(tempTexFile)) {
-        writer.write(aiResponse);
+        writer.write(latexContent);
     }
 
     // Prepare ProcessBuilder
@@ -94,5 +104,6 @@ public ResponseEntity<byte[]> generateResumePdf(@RequestBody ResumeRequest reque
     new File(pdfFile.getAbsolutePath().replace(".pdf", ".log")).delete();
 
     return ResponseEntity.ok().headers(headers).body(pdfBytes);
-}
+
+    }
 }
