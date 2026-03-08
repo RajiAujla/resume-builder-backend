@@ -28,7 +28,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build docker image
-        run: docker build -t resume-ai:latest .
+        run: docker build -t rajwinderkaur061/resume-ai:latest .
 
       - name: Push docker image
-        run: docker push resume-ai:latest
+        run: docker push rajwinderkaur061/resume-ai:latest
