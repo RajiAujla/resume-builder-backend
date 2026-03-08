@@ -7,4 +7,5 @@ public class ResumeRequest {
     private String name;
     private String experience;
     private List<String> skills;
+    private String education = "Not provided";
 }

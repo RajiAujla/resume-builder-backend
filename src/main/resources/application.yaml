@@ -1,3 +1,18 @@
 spring:
   application:
     name: resume-AI
+
+latex:
+  pdflatex:
+    path: /Library/TeX/texbin/pdflatex
+
+cloud:
+  aws:
+    credentials:
+      access-key:
+      secret-key:
+    region:
+      static: us-east-1
+    bucket:
+      name: "amzn-s3-resume-ai-bucket-v1"
+      folder: "pdfs"
