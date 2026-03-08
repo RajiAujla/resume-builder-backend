@@ -1,12 +1,8 @@
 name: Resume Builder CD
 
 on:
-  workflow_run:
-    workflows: ["Resume Builder CI"]
-    types:
-      - completed
-    branches:
-      - master
+  push:
+    branches: [master]
 
 jobs:
   deploy-to-ec2:
