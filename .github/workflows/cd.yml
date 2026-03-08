@@ -5,6 +5,8 @@ on:
     workflows: ["Resume Builder CI"]
     types:
       - completed
+    branches:
+      - master
 
 jobs:
   deploy-to-ec2:
