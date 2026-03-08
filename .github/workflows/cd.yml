@@ -1,19 +1,24 @@
 name: Resume Builder CD
 
 on:
-  push:
-    branches: [master]
+  workflow_run:
+    workflows: ["Resume Builder CI"]
+    types:
+      - completed
 
 jobs:
-  docker-and-Ec2:
+  deploy-to-ec2:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Pull Docker image
-        run: sudo docker pull rajwinderkaur061/resume-ai:latest
-
-      - name: delete old docker container
-        run: sudo docker rm -f resume-ai-container || true
-
-      - name: Run docker container
-        run: sudo docker run -d -p 8080:8080 --name resume-ai-container rajwinderkaur061/resume-ai
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            docker pull rajwinderkaur061/resume-ai:latest
+            docker stop resume-ai-container || true
+            docker rm resume-ai-container || true
+            docker run -d -p 8080:8080 --name resume-ai-container rajwinderkaur061/resume-ai:latest
